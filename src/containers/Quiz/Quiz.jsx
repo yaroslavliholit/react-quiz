@@ -9,10 +9,12 @@ import Classes from './Quiz.module.css';
 export default class Quiz extends Component {
 
   state = {
-    isFinished: true,
+    // Ключ results будет хранить информацию о том как пользователь отвечал на вопросы
+    results: {}, // {[id]: succes error}
+    isFinished: false,
     activeQuestion: 0,
     // Будем хранить инф. о текущем клике юзера (0 или 1)
-    answerState: null,
+    answerState: null, // {[id]: succes error}
     // В ключе quiz будут хранится все вопросы, правильные ответы, которые относятся к голосованию 
     quiz: [
       // question item
@@ -42,6 +44,15 @@ export default class Quiz extends Component {
     ],
   };
 
+  RetryHendler = () => {
+    this.setState({
+      activeQuestion: 0,
+      isFinished: false,
+      answerState: null,
+      results: {},
+    });
+  }
+
   isQuizFinish(){
     if ( (this.state.activeQuestion + 1) >= this.state.quiz.length ) {
       return true;
@@ -54,17 +65,23 @@ export default class Quiz extends Component {
     // Условие запрещает обрабатывать клики, если уже есть правильный ответ
     if ( this.state.answerState ) {
       const key = Object.keys(this.state.answerState)[0];
-      if ( this.state.answerState[key] === 'succes' ) {
+      if ( this.state.answerState[key] === 'success' ) {
         return;
       }
     }
 
     const question = this.state.quiz[this.state.activeQuestion];
+    const results = this.state.results;
 
     if (question.rightAnswerId === answerId) {
+      // Если в первый раз правильно ответели на вопрос
+      if ( !results[question.id] ) {
+        results[question.id] = 'success'
+      }
 
       this.setState({
-        answerState: { [answerId]: 'succes' }
+        answerState: { [answerId]: 'success' },
+        results,
       });
 
       // Создание Timeout необходимо для того что бы дать время на отображения ответа (правильно/неправильно)
@@ -74,21 +91,21 @@ export default class Quiz extends Component {
           this.setState({
             isFinished: true,
           });
-          console.log('Finish Quiz');
         } else {
           this.setState({
-            answerState: null,
             activeQuestion: this.state.activeQuestion + 1,
+            answerState: null,
           });
         }
         window.clearTimeout(timeout);
       }, 1000)
 
     } else {
+      results[question.id] = 'error'
       this.setState({
-        answerState: { [answerId]: 'error' }
+        answerState: { [answerId]: 'error' },
+        results,
       });
-      console.log(false);
     }
   }
 
@@ -100,7 +117,11 @@ export default class Quiz extends Component {
 
             {
               this.state.isFinished 
-              ? <FinishedQuiz />
+              ? <FinishedQuiz 
+                  results={this.state.results} 
+                  quiz={this.state.quiz}
+                  onRetry={this.RetryHendler}
+                />
               : <ActiveQuiz 
                 // TODO: Переписать onAnswerClick на Context API
                 onAnswerClick={this.onAnswerClickHandler}

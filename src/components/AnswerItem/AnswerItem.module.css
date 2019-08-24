@@ -13,7 +13,7 @@
   transition: background-color .3s ease-in-out;
 }
 
-.AnswerItem.succes {
+.AnswerItem.success {
   background-color: lightgreen;
 }
 
