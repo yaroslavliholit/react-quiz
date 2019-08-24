@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ActiveQuiz from '../../components/ActiveQuiz/ActiveQuiz.jsx';
+import FinishedQuiz from '../../components/FinishedQuiz/FinishedQuiz.jsx';
 import Classes from './Quiz.module.css';
 
 // Страница где мы будем проходить тест
@@ -8,6 +9,7 @@ import Classes from './Quiz.module.css';
 export default class Quiz extends Component {
 
   state = {
+    isFinished: true,
     activeQuestion: 0,
     // Будем хранить инф. о текущем клике юзера (0 или 1)
     answerState: null,
@@ -69,6 +71,9 @@ export default class Quiz extends Component {
       const timeout = window.setTimeout(() => {
         // Нужно проверить является ли активный вопрос последним из всех вопросов
         if (this.isQuizFinish()) {
+          this.setState({
+            isFinished: true,
+          });
           console.log('Finish Quiz');
         } else {
           this.setState({
@@ -92,16 +97,23 @@ export default class Quiz extends Component {
       <div className={Classes.Quiz}>
           <div className={Classes.QuizWrapper}>
             <h1 className={Classes.Quiz__title}>Ответьте на все вопросы</h1>
-            <ActiveQuiz 
-              // TODO: Переписать onAnswerClick на Context API
-              onAnswerClick={this.onAnswerClickHandler}
-              
-              question={this.state.quiz[this.state.activeQuestion].question}
-              answers={this.state.quiz[this.state.activeQuestion].answers}
-              quizLength={this.state.quiz.length}
-              answerNumber={this.state.activeQuestion + 1}
-              state={this.state.answerState}
-            />
+
+            {
+              this.state.isFinished 
+              ? <FinishedQuiz />
+              : <ActiveQuiz 
+                // TODO: Переписать onAnswerClick на Context API
+                onAnswerClick={this.onAnswerClickHandler}
+                
+                question={this.state.quiz[this.state.activeQuestion].question}
+                answers={this.state.quiz[this.state.activeQuestion].answers}
+                quizLength={this.state.quiz.length}
+                answerNumber={this.state.activeQuestion + 1}
+                state={this.state.answerState}
+              />
+            }
+
+
           </div>
       </div>
     );
