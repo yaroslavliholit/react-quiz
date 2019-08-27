@@ -1,0 +1,30 @@
+.Input {
+  margin-bottom: 15px;
+}
+
+.Input.Invalid .Input__label {
+  color: #f01f30;
+}
+
+.Input__label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding: 0px;
+}
+
+.Input__field {
+  display: block;
+  width: 100%;
+  padding: 7px;
+  margin: 0 0 5px 0;
+  box-sizing: border-box;
+  border: 1px solid #bebebe;
+  transition: all .3s ease-in-out;
+}
+
+.Field_error {
+  color: #f01f30;
+  font-size: 13px;
+  font-weight: bold;
+}
