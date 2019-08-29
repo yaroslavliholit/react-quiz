@@ -41,10 +41,6 @@ export default class Auth extends Component {
     },
   };
 
-  submitHandler = e => {
-    e.preventDefault();
-  }
-
   validateControl = (value, validation) => {
     if (!validation) {
       return true;
@@ -66,6 +62,10 @@ export default class Auth extends Component {
 
     return isValid;
   }
+
+  submitHandler = e => {
+    e.preventDefault();
+  }
   
   loginHendler = () => {
 
@@ -74,7 +74,6 @@ export default class Auth extends Component {
   registerHendler = () => {
 
   }
-
 
   onChangeHandler = (e, controlName) => {
     const formControls = {...this.state.formControls};

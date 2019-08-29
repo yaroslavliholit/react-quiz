@@ -22,9 +22,7 @@ export default class QuizList extends Component {
       <div className={Classes.QuizList}>
         <h1>Список тестов</h1>
         <ul className={Classes.QuizList__list }>
-          {
-            this.renderQuizes()
-          }
+          { this.renderQuizes() }
         </ul>
       </div>
     );
