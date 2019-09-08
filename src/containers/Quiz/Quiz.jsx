@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
+import axios from '../../axios/axios-quiz.js';
 import ActiveQuiz from '../../components/ActiveQuiz/ActiveQuiz.jsx';
 import FinishedQuiz from '../../components/FinishedQuiz/FinishedQuiz.jsx';
+import Loader from '../../ui/Loader/Loader.jsx';
 import Classes from './Quiz.module.css';
 
 // Страница где мы будем проходить тест
@@ -16,32 +18,8 @@ export default class Quiz extends Component {
     // Будем хранить инф. о текущем клике юзера (0 или 1)
     answerState: null, // {[id]: succes error}
     // В ключе quiz будут хранится все вопросы, правильные ответы, которые относятся к голосованию 
-    quiz: [
-      // question item
-      {
-        question: 'Сколько будет 2^2?',
-        rightAnswerId: 1,
-        id: 1,
-        answers: [
-          {text: '4', id: 1},
-          {text: '2 ', id: 2},
-          {text: '3 ', id: 3},
-          {text: '1', id: 4},
-        ],
-      },
-      {
-        question: 'Сколько будет 3^2?',
-        rightAnswerId: 3,
-        id: 2,
-        answers: [
-          {text: '4', id: 1},
-          {text: '2 ', id: 2},
-          {text: '6 ', id: 3},
-          {text: '1', id: 4},
-        ],
-      },
-      // question item
-    ],
+    quiz: [],
+    loading: true
   };
 
   RetryHendler = () => {
@@ -109,8 +87,18 @@ export default class Quiz extends Component {
     }
   }
 
-  componentDidMount() {
-    console.log('Quiz id', this.props.match.params.id);
+  async componentDidMount() {
+    try {
+      const response = await axios.get(`/quizes/${this.props.match.params.id}.json`);
+      const quiz = response.data;
+
+      this.setState({
+        quiz,
+        loading: false,
+      })
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   render () {
@@ -120,25 +108,26 @@ export default class Quiz extends Component {
             <h1 className={Classes.Quiz__title}>Ответьте на все вопросы</h1>
 
             {
-              this.state.isFinished 
-              ? <FinishedQuiz 
-                  results={this.state.results} 
-                  quiz={this.state.quiz}
-                  onRetry={this.RetryHendler}
-                />
-              : <ActiveQuiz 
-                // TODO: Переписать onAnswerClick на Context API
-                onAnswerClick={this.onAnswerClickHandler}
-                
-                question={this.state.quiz[this.state.activeQuestion].question}
-                answers={this.state.quiz[this.state.activeQuestion].answers}
-                quizLength={this.state.quiz.length}
-                answerNumber={this.state.activeQuestion + 1}
-                state={this.state.answerState}
-              />
+              this.state.loading
+                ? <Loader />
+                :  this.state.isFinished 
+                    ? <FinishedQuiz 
+                        results={this.state.results} 
+                        quiz={this.state.quiz}
+                        onRetry={this.RetryHendler}
+                      />
+                    : <ActiveQuiz 
+                      // TODO: Переписать onAnswerClick на Context API
+                      onAnswerClick={this.onAnswerClickHandler}
+                      
+                      question={this.state.quiz[this.state.activeQuestion].question}
+                      answers={this.state.quiz[this.state.activeQuestion].answers}
+                      quizLength={this.state.quiz.length}
+                      answerNumber={this.state.activeQuestion + 1}
+                      state={this.state.answerState}
+                    />
             }
-
-
+            
           </div>
       </div>
     );

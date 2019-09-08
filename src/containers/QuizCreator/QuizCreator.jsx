@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from '../../axios/axios-quiz.js';
 import {createControl, validate, validateForm} from '../../form/formFramework.js';
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary.jsx';
 import Button from '../../ui/Button/Button.jsx';
@@ -109,13 +110,22 @@ export default class QuizCreator extends Component {
       rightAnswerId: 1,
       formControls: createFormControl(),
     });
-
   }
   
-  createQuizHandler = e => {
+  createQuizHandler = async e => {
     e.preventDefault();
-    console.log(this.state.quiz);
-    // TODO: Server
+
+    try {
+      await axios.post('/quizes.json', this.state.quiz)
+      this.setState({
+        quiz: [],
+        isFormValid: false,
+        rightAnswerId: 1,
+        formControls: createFormControl(),
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   selectChangeHandler = e => {

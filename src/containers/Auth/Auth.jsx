@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
+import axios from 'axios';
+import data from '../../axios/database';
 import Button from '../../ui/Button/Button.jsx';
 import Input from '../../ui/Input/Input.jsx';
 import Classes from './Auth.module.css';
 
 function validateEmail(email) {
-  // /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
@@ -67,12 +68,34 @@ export default class Auth extends Component {
     e.preventDefault();
   }
   
-  loginHendler = () => {
+  loginHendler = async () => {
+    const authData = {
+      email: this.state.formControls.email.value,
+      password: this.state.formControls.password.value,
+      returnSecureToken: true
+    };
 
+    try {
+      const response = await axios.post(data.signInWithPassword, authData);
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
-  registerHendler = () => {
+  registerHendler = async () => {
+    const authData = {
+      email: this.state.formControls.email.value,
+      password: this.state.formControls.password.value,
+      returnSecureToken: true
+    };
 
+    try {
+      const response = await axios.post(data.signUp, authData);
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   onChangeHandler = (e, controlName) => {
@@ -123,8 +146,8 @@ export default class Auth extends Component {
 
           <form className={Classes.Auth_form} onSubmit={this.submitHandler}>
             { this.inputsRender() }
-            <Button type="success" disabled={!this.state.isFormValid} onClick={() => this.loginHendler}> Войти </Button>
-            <Button type="primary" disabled={!this.state.isFormValid} onClick={() => this.registerHendler}> Регистрация </Button>
+            <Button type="success" disabled={!this.state.isFormValid} onClick={this.loginHendler}> Войти </Button>
+            <Button type="primary" disabled={!this.state.isFormValid} onClick={this.registerHendler}> Регистрация </Button>
           </form>
 
         </div>
