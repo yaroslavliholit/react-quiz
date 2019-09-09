@@ -1,7 +1,7 @@
 import React from 'react';
 import Classes from './Loader.module.css';
 
-const Loader = props => {
+const Loader = () => {
   return (
     <div className={Classes.ldsEllipsis}>
       <div />
