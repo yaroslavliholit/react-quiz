@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-import data from '../../axios/database';
+import {connect} from 'react-redux';
+import {auth} from '../../store/actions/auth.js';
 import Button from '../../ui/Button/Button.jsx';
 import Input from '../../ui/Input/Input.jsx';
 import Classes from './Auth.module.css';
@@ -10,7 +10,7 @@ function validateEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 
-export default class Auth extends Component {
+class Auth extends Component {
 
   state = {
     isFormValid: false,
@@ -68,34 +68,20 @@ export default class Auth extends Component {
     e.preventDefault();
   }
   
-  loginHendler = async () => {
-    const authData = {
-      email: this.state.formControls.email.value,
-      password: this.state.formControls.password.value,
-      returnSecureToken: true
-    };
-
-    try {
-      const response = await axios.post(data.signInWithPassword, authData);
-      console.log(response);
-    } catch (e) {
-      console.log(e);
-    }
+  loginHendler = () => {
+    this.props.auth(
+      this.state.formControls.email.value,
+      this.state.formControls.password.value,
+      true,
+    );
   }
 
-  registerHendler = async () => {
-    const authData = {
-      email: this.state.formControls.email.value,
-      password: this.state.formControls.password.value,
-      returnSecureToken: true
-    };
-
-    try {
-      const response = await axios.post(data.signUp, authData);
-      console.log(response);
-    } catch (e) {
-      console.log(e);
-    }
+  registerHendler = () => {
+    this.props.auth(
+      this.state.formControls.email.value,
+      this.state.formControls.password.value,
+      false,
+    );
   }
 
   onChangeHandler = (e, controlName) => {
@@ -155,3 +141,11 @@ export default class Auth extends Component {
     );
   }
 }
+
+ function mapDisatchToProps(dispatch) {
+  return {
+    auth: (email, password, isLogin) => dispatch(auth(email, password, isLogin))
+  }
+}
+
+export default connect(null, mapDisatchToProps)(Auth);
