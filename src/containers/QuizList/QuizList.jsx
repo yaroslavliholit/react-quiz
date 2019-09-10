@@ -27,7 +27,7 @@ class QuizList extends Component {
   render() {
     return (
       <div className={Classes.QuizList}>
-        <h1>Список тестов</h1>
+        <h1 className={Classes.QuizList__title}>Список тестов</h1>
         {
           // this.props.loading && this.props.quizes.length !== 0 -> This is disable LOADER component
           this.props.loading 

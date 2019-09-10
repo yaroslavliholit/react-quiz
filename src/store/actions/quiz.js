@@ -79,7 +79,8 @@ export function fetchQuizById(quizId) {
 export function quizSetState(answerState, results) {
   return {
     type: QUIZ_SET_STATE,
-    answerState, results
+    answerState,
+    results
   }
 }
 
@@ -125,7 +126,9 @@ export function quizAnswerClick(answerId) {
         results[question.id] = 'success'
       }
 
-      dispatch( quizSetState( {[answerId]: 'success'}, results) );
+      dispatch(quizSetState({
+        [answerId]: 'success'
+      }, results));
 
       // Создание Timeout необходимо для того что бы дать время на отображения ответа (правильно/неправильно)
       const timeout = window.setTimeout(() => {
@@ -139,7 +142,9 @@ export function quizAnswerClick(answerId) {
       }, 1000)
 
     } else {
-      dispatch( quizSetState({[answerId]: 'error'}, results));
+      dispatch(quizSetState({
+        [answerId]: 'error'
+      }, results));
     }
   }
 }

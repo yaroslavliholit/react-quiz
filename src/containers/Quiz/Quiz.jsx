@@ -24,7 +24,6 @@ class Quiz extends Component {
       <div className={Classes.Quiz}>
           <div className={Classes.QuizWrapper}>
             <h1 className={Classes.Quiz__title}>Ответьте на все вопросы</h1>
-
             {
               this.props.loading || !this.props.quiz
                 ? <Loader />
@@ -37,7 +36,6 @@ class Quiz extends Component {
                     : <ActiveQuiz 
                         // TODO: Переписать onAnswerClick на Context API
                         onAnswerClick={this.props.quizAnswerClick}
-                        
                         question={this.props.quiz[this.props.activeQuestion].question}
                         answers={this.props.quiz[this.props.activeQuestion].answers}
                         quizLength={this.props.quiz.length}
@@ -45,7 +43,6 @@ class Quiz extends Component {
                         state={this.props.answerState}
                       />
             }
-            
           </div>
       </div>
     );
