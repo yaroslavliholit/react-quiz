@@ -8,9 +8,12 @@
 }
 
 .Quiz__title {
+  font-size: 1.8rem;
+  text-align: center;
   color: white;
 }
 
 .QuizWrapper {
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
 }
